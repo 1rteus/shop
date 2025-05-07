@@ -15,17 +15,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const userAvatar = document.getElementById('user-avatar');
     const onlineCount = document.getElementById('online-count');
     const funButtons = document.querySelectorAll('.fun-btn');
-    const themeBtn = document.querySelector('.fun-btn[title="Сменить тему"]');
 
-    // Установка информации о пользователе
+    // Инициализация пользователя
     usernameDisplay.textContent = currentUser;
     userAvatar.textContent = currentUser.charAt(0).toUpperCase();
-    
-    // Цвет аватара
-    const colors = ['#4a8fe7', '#e74a4a', '#4ae78f', '#e7b34a', '#8f4ae7'];
-    userAvatar.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    userAvatar.style.backgroundColor = getRandomColor();
 
-    // Загрузка сообщений
+    // Подключение к "серверу" (localStorage как временное решение)
+    connectToChat();
+
+    // Функции
+    function getRandomColor() {
+        const colors = ['#4a8fe7', '#e74a4a', '#4ae78f', '#e7b34a', '#8f4ae7'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function connectToChat() {
+        // Добавляем пользователя в онлайн
+        const onlineUsers = JSON.parse(localStorage.getItem('tegrafaOnlineUsers') || {};
+        onlineUsers[currentUser] = new Date().getTime();
+        localStorage.setItem('tegrafaOnlineUsers', JSON.stringify(onlineUsers));
+        
+        // Загружаем сообщения и обновляем онлайн
+        loadMessages();
+        updateOnlineCount();
+        
+        // Запускаем периодическое обновление
+        setInterval(updateOnlineCount, 5000);
+        setInterval(checkOnlineUsers, 10000);
+        
+        // Слушаем изменения в localStorage (имитация реального чата)
+        window.addEventListener('storage', handleStorageEvent);
+    }
+
+    function handleStorageEvent(e) {
+        if (e.key === 'tegrafaMessages') {
+            loadMessages();
+        } else if (e.key === 'tegrafaOnlineUsers') {
+            updateOnlineCount();
+        }
+    }
+
     function loadMessages() {
         const messages = JSON.parse(localStorage.getItem('tegrafaMessages')) || [];
         messagesContainer.innerHTML = '';
@@ -49,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Отправка сообщения
     function sendMessage() {
         const text = messageInput.value.trim();
         if (!text) return;
@@ -60,105 +89,88 @@ document.addEventListener('DOMContentLoaded', function() {
         const message = {
             sender: currentUser,
             text: text,
-            time: time
+            time: time,
+            timestamp: now.getTime()
         };
         
-        // Сохранение сообщения
         const messages = JSON.parse(localStorage.getItem('tegrafaMessages')) || [];
         messages.push(message);
         localStorage.setItem('tegrafaMessages', JSON.stringify(messages));
         
-        // Очистка поля ввода и обновление чата
+        // Обновляем свое сообщение сразу
+        loadMessages();
+        
+        // Очищаем поле ввода
         messageInput.value = '';
-        loadMessages();
         
-        // Имитация ответа (30% chance)
-        if (Math.random() < 0.3) {
-            setTimeout(sendBotMessage, 1500 + Math.random() * 3000);
-        }
+        // Триггерим событие для других вкладок
+        const event = new Event('storage');
+        window.dispatchEvent(event);
     }
 
-    // Ответ бота
-    function sendBotMessage() {
-        const botMessages = [
-            "Привет! Как дела?",
-            "Кто-нибудь здесь?",
-            "Теграфа - лучший чат!",
-            "Я просто бот, не обращайте на меня внимания",
-            "Попробуйте нашу секретную функцию 🔮",
-            "Какой прекрасный день для общения!",
-            "Вы знали, что этот чат полностью на localStorage?",
-            "Напишите что-нибудь интересное!"
-        ];
+    function updateOnlineCount() {
+        const onlineUsers = JSON.parse(localStorage.getItem('tegrafaOnlineUsers') || {};
+        const currentTime = new Date().getTime();
         
-        const botMessage = {
-            sender: "Теграфа-Бот",
-            text: botMessages[Math.floor(Math.random() * botMessages.length)],
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
+        // Удаляем неактивных пользователей (неактивны более 30 сек)
+        Object.keys(onlineUsers).forEach(user => {
+            if (currentTime - onlineUsers[user] > 30000) {
+                delete onlineUsers[user];
+            }
+        });
         
-        const messages = JSON.parse(localStorage.getItem('tegrafaMessages')) || [];
-        messages.push(botMessage);
-        localStorage.setItem('tegrafaMessages', JSON.stringify(messages));
-        loadMessages();
+        localStorage.setItem('tegrafaOnlineUsers', JSON.stringify(onlineUsers));
+        onlineCount.textContent = Object.keys(onlineUsers).length;
     }
 
-    // Выход из аккаунта
+    function checkOnlineUsers() {
+        // Обновляем свое время последней активности
+        const onlineUsers = JSON.parse(localStorage.getItem('tegrafaOnlineUsers') || {};
+        onlineUsers[currentUser] = new Date().getTime();
+        localStorage.setItem('tegrafaOnlineUsers', JSON.stringify(onlineUsers));
+        
+        // Триггерим событие для других вкладок
+        const event = new Event('storage');
+        window.dispatchEvent(event);
+    }
+
     function logout() {
+        // Удаляем пользователя из онлайн
+        const onlineUsers = JSON.parse(localStorage.getItem('tegrafaOnlineUsers') || {};
+        delete onlineUsers[currentUser];
+        localStorage.setItem('tegrafaOnlineUsers', JSON.stringify(onlineUsers));
+        
+        // Удаляем текущего пользователя и перенаправляем
         localStorage.removeItem('currentUser');
         window.location.href = 'index.html';
     }
 
-    // Обновление счетчика онлайн
-    function updateOnlineCount() {
-        const count = 1 + Math.floor(Math.random() * 15);
-        onlineCount.textContent = count;
-    }
-
-    // Функции для кнопок
-    function sendRandomSticker() {
-        const stickers = ['😀', '🤖', '🎉', '❤️', '🔥', '👀', '🚀', '🌈', '👍', '🎯'];
-        const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
-        messageInput.value += randomSticker;
-        messageInput.focus();
-    }
-
-    function toggleTheme() {
-        document.body.classList.toggle('light-theme');
-    }
-
-    function secretFunction() {
-        const secretMessages = [
-            "Вы активировали секретную функцию!",
-            "✨ Магия чата активирована ✨",
-            "Теперь вы видите скрытые сообщения",
-            "Поздравляем! Вы нашли пасхалку"
-        ];
-        
-        alert(secretMessages[Math.floor(Math.random() * secretMessages.length)]);
-    }
-
     // Обработчики событий
     sendBtn.addEventListener('click', sendMessage);
-    
     messageInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
-    
     logoutBtn.addEventListener('click', logout);
-    
-    // Назначение функций кнопкам
-    funButtons[0].addEventListener('click', sendRandomSticker);
-    funButtons[1].addEventListener('click', toggleTheme);
-    funButtons[2].addEventListener('click', secretFunction);
-    
-    // Обновление онлайн каждые 5-10 сек
-    setInterval(updateOnlineCount, 5000 + Math.random() * 5000);
-    updateOnlineCount();
-    
-    // Загрузка сообщений при старте
-    loadMessages();
+
+    // Функции для кнопок
+    funButtons[0].addEventListener('click', function() {
+        const stickers = ['😀', '🤖', '🎉', '❤️', '🔥', '👀', '🚀', '🌈'];
+        messageInput.value += stickers[Math.floor(Math.random() * stickers.length)];
+        messageInput.focus();
+    });
+
+    funButtons[1].addEventListener('click', function() {
+        document.body.classList.toggle('light-theme');
+    });
+
+    funButtons[2].addEventListener('click', function() {
+        alert('🔮 Секретная функция: теперь все ваши сообщения будут волшебными!');
+    });
+
+    // Обновляем активность при любом действии пользователя
+    document.addEventListener('click', checkOnlineUsers);
+    document.addEventListener('keypress', checkOnlineUsers);
 });
