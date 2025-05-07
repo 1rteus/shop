@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теграфа - Вход/Регистрация</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">Теграфа</div>
+        <div class="auth-form">
+            <div class="tabs">
+                <button class="tab active" id="login-tab">Вход</button>
+                <button class="tab" id="register-tab">Регистрация</button>
+            </div>
+            
+            <form id="login-form">
+                <input type="text" placeholder="Имя пользователя" required>
+                <input type="password" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+            
+            <form id="register-form" style="display: none;">
+                <input type="text" placeholder="Придумайте имя пользователя" required>
+                <input type="password" placeholder="Придумайте пароль" required>
+                <input type="password" placeholder="Повторите пароль" required>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Входя в Теграфу, вы соглашаетесь с нашими <a href="#">Условиями</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+</body>
+</html>
