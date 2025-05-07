@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(rgba(40, 40, 40, 0.8), rgba(40, 40, 40, 0.8)), 
+                url('../images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #e0e0e0;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.logo {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.auth-form {
+    background: rgba(50, 50, 50, 0.9);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #666;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab.active {
+    color: #fff;
+    border-bottom: 2px solid #4a8fe7;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: rgba(70, 70, 70, 0.5);
+    color: #fff;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #4a8fe7;
+}
+
+button[type="submit"] {
+    padding: 12px;
+    background: #4a8fe7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: #3a7ed7;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    text-align: center;
+    color: #999;
+}
+
+.auth-footer a {
+    color: #4a8fe7;
+    text-decoration: none;
+}
