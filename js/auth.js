@@ -19,49 +19,84 @@ document.addEventListener('DOMContentLoaded', function() {
         loginForm.style.display = 'none';
     });
     
+    // Инициализация хранилища пользователей
+    if (!localStorage.getItem('tegrafaUsers')) {
+        localStorage.setItem('tegrafaUsers', JSON.stringify({}));
+    }
+    
     // Обработка входа
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const username = this.querySelector('input[type="text"]').value;
-        const password = this.querySelector('input[type="password"]').value;
+        const username = this.querySelector('input[type="text"]').value.trim();
+        const password = this.querySelector('input[type="password"]').value.trim();
         
-        // Простая проверка (в реальном приложении нужна проверка с сервером)
-        if (username && password) {
-            // Сохраняем пользователя в localStorage
+        // Получаем всех зарегистрированных пользователей
+        const users = JSON.parse(localStorage.getItem('tegrafaUsers'));
+        
+        // Проверка существования пользователя и пароля
+        if (users[username] && users[username].password === password) {
+            // Сохраняем текущего пользователя
             localStorage.setItem('currentUser', username);
             
             // Перенаправляем в чат
             window.location.href = 'chat.html';
         } else {
-            alert('Пожалуйста, заполните все поля');
+            alert('Неверное имя пользователя или пароль');
+            this.querySelector('input[type="password"]').value = '';
         }
     });
     
     // Обработка регистрации
     registerForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const username = this.querySelectorAll('input[type="text"]')[0].value;
-        const password1 = this.querySelectorAll('input[type="password"]')[0].value;
-        const password2 = this.querySelectorAll('input[type="password"]')[1].value;
+        const username = this.querySelectorAll('input[type="text"]')[0].value.trim();
+        const password1 = this.querySelectorAll('input[type="password"]')[0].value.trim();
+        const password2 = this.querySelectorAll('input[type="password"]')[1].value.trim();
+        
+        // Получаем всех пользователей
+        const users = JSON.parse(localStorage.getItem('tegrafaUsers'));
+        
+        // Валидация
+        if (!username || !password1) {
+            alert('Имя пользователя и пароль не могут быть пустыми');
+            return;
+        }
         
         if (password1 !== password2) {
             alert('Пароли не совпадают');
             return;
         }
         
-        if (username && password1) {
-            // Сохраняем пользователя (в реальном приложении нужно хэшировать пароль)
-            localStorage.setItem('currentUser', username);
-            
-            // Сохраняем учетные данные (небезопасно! только для демо)
-            const users = JSON.parse(localStorage.getItem('users') || {};
-            users[username] = { password: password1 };
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            // Перенаправляем в чат
-            window.location.href = 'chat.html';
-        } else {
-            alert('Пожалуйста, заполните все поля');
+        if (username.length < 3) {
+            alert('Имя пользователя должно быть не менее 3 символов');
+            return;
         }
+        
+        if (password1.length < 4) {
+            alert('Пароль должен быть не менее 4 символов');
+            return;
+        }
+        
+        if (users[username]) {
+            alert('Пользователь с таким именем уже существует');
+            return;
+        }
+        
+        // Регистрация нового пользователя
+        users[username] = {
+            password: password1,
+            registeredAt: new Date().toISOString()
+        };
+        
+        localStorage.setItem('tegrafaUsers', JSON.stringify(users));
+        localStorage.setItem('currentUser', username);
+        
+        // Перенаправляем в чат
+        window.location.href = 'chat.html';
     });
+    
+    // Проверка, если пользователь уже авторизован
+    if (localStorage.getItem('currentUser')) {
+        window.location.href = 'chat.html';
+    }
 });
