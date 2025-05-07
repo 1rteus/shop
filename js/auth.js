@@ -143,4 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Инициализация начального состояния
     switchToLogin();
+    // После успешного входа или регистрации добавляем:
+// Вместо redirectToChat();
+const onlineUsers = JSON.parse(localStorage.getItem('tegrafaOnlineUsers')) || {};
+onlineUsers[username] = new Date().getTime();
+localStorage.setItem('tegrafaOnlineUsers', JSON.stringify(onlineUsers));
+window.location.href = 'chat.html';
 });
+
