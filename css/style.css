@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(rgba(30, 30, 30, 0.9), rgba(30, 30, 30, 0.9)), 
+    background: linear-gradient(rgba(30, 30, 30, 0.85), rgba(30, 30, 30, 0.85)), 
                 url('../images/background.jpg') no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
@@ -13,11 +13,12 @@ body {
 .chat-container {
     display: flex;
     height: 100vh;
+    width: 100vw;
 }
 
 .sidebar {
     width: 250px;
-    background: rgba(40, 40, 40, 0.8);
+    background: rgba(40, 40, 40, 0.9);
     border-right: 1px solid #444;
     display: flex;
     flex-direction: column;
@@ -118,6 +119,7 @@ body {
     border-radius: 15px;
     position: relative;
     word-wrap: break-word;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .message.received {
@@ -163,11 +165,13 @@ textarea {
     min-height: 50px;
     max-height: 150px;
     margin-bottom: 10px;
+    transition: all 0.3s;
 }
 
 textarea:focus {
     outline: none;
     border-color: #4a8fe7;
+    box-shadow: 0 0 5px rgba(74, 143, 231, 0.5);
 }
 
 #send-btn {
@@ -178,12 +182,13 @@ textarea:focus {
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s;
     align-self: flex-end;
 }
 
 #send-btn:hover {
     background: #3a7ed7;
+    transform: translateY(-1px);
 }
 
 .fun-buttons {
@@ -210,20 +215,15 @@ textarea:focus {
     transform: scale(1.1);
 }
 
-/* Анимации */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.message {
-    animation: fadeIn 0.3s ease-out;
-}
-
 /* Темная тема по умолчанию */
-:root {
-    --bg-color: rgba(30, 30, 30, 0.9);
-    --sidebar-color: rgba(40, 40, 40, 0.8);
+body {
+    --bg-color: rgba(30, 30, 30, 0.85);
+    --sidebar-color: rgba(40, 40, 40, 0.9);
     --text-color: #e0e0e0;
     --accent-color: #4a8fe7;
     --message-received: rgba(70, 70, 70, 0.7);
@@ -231,30 +231,13 @@ textarea:focus {
 }
 
 /* Светлая тема */
-.light-theme {
+body.light-theme {
     --bg-color: rgba(240, 240, 240, 0.9);
-    --sidebar-color: rgba(220, 220, 220, 0.8);
+    --sidebar-color: rgba(220, 220, 220, 0.9);
     --text-color: #333;
     --accent-color: #1a73e8;
     --message-received: rgba(220, 220, 220, 0.9);
     --message-sent: rgba(66, 133, 244, 0.9);
-}
-
-/* Применение темы */
-body {
     background: linear-gradient(var(--bg-color), var(--bg-color)), 
                 url('../images/background.jpg') no-repeat center center fixed;
-    color: var(--text-color);
-}
-
-.sidebar {
-    background: var(--sidebar-color);
-}
-
-.message.received {
-    background: var(--message-received);
-}
-
-.message.sent {
-    background: var(--message-sent);
 }
