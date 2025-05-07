@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Проверка авторизации
     if (localStorage.getItem('currentUser')) {
-        window.location.href = 'chat.html';
+        redirectToChat();
         return;
     }
     
@@ -116,28 +116,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Вспомогательные функции
     function showError(form, message) {
-        const errorElement = form.querySelector('.error-message') || document.createElement('div');
-        errorElement.className = 'error-message';
-        errorElement.textContent = message;
-        errorElement.style.color = '#ff6b6b';
-        errorElement.style.marginTop = '10px';
-        errorElement.style.textAlign = 'center';
-        
-        if (!form.querySelector('.error-message')) {
-            form.appendChild(errorElement);
+        // Удаляем старые сообщения об ошибках
+        const oldError = form.querySelector('.error-message');
+        if (oldError) {
+            form.removeChild(oldError);
         }
         
-        // Анимация ошибки
+        // Создаем новое сообщение об ошибке
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-message';
+        errorElement.textContent = message;
+        form.appendChild(errorElement);
+        
+        // Добавляем анимацию
         errorElement.style.animation = 'shake 0.5s';
-        setTimeout(() => {
-            errorElement.style.animation = '';
-        }, 500);
     }
     
     function redirectToChat() {
         // Анимация перед переходом
         document.body.style.opacity = '0';
-        document.body.style.transition = 'opacity 0.3s';
         
         setTimeout(() => {
             window.location.href = 'chat.html';
