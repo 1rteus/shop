@@ -1,25 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const currentUser = localStorage.getItem('currentUser');
-    
     // Проверка авторизации
+    const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) {
         window.location.href = 'index.html';
         return;
     }
-    
-    // Отображение информации о пользователе
+
+    // Элементы интерфейса
+    const messagesContainer = document.getElementById('messages');
+    const messageInput = document.getElementById('message-input');
+    const sendBtn = document.getElementById('send-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const usernameDisplay = document.getElementById('username-display');
+    const userAvatar = document.getElementById('user-avatar');
+    const onlineCount = document.getElementById('online-count');
+    const funButtons = document.querySelectorAll('.fun-btn');
+    const themeBtn = document.querySelector('.fun-btn[title="Сменить тему"]');
+
+    // Установка информации о пользователе
     usernameDisplay.textContent = currentUser;
     userAvatar.textContent = currentUser.charAt(0).toUpperCase();
     
-    // Генерация случайного цвета для аватара
+    // Цвет аватара
     const colors = ['#4a8fe7', '#e74a4a', '#4ae78f', '#e7b34a', '#8f4ae7'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    userAvatar.style.backgroundColor = randomColor;
-    
+    userAvatar.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
     // Загрузка сообщений
     function loadMessages() {
         const messages = JSON.parse(localStorage.getItem('tegrafaMessages')) || [];
-        
         messagesContainer.innerHTML = '';
         
         messages.forEach(msg => {
@@ -38,10 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
             messagesContainer.appendChild(messageElement);
         });
         
-        // Прокрутка вниз
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    
+
     // Отправка сообщения
     function sendMessage() {
         const text = messageInput.value.trim();
@@ -61,84 +68,97 @@ document.addEventListener('DOMContentLoaded', function() {
         messages.push(message);
         localStorage.setItem('tegrafaMessages', JSON.stringify(messages));
         
-        // Очистка поля ввода
+        // Очистка поля ввода и обновление чата
         messageInput.value = '';
-        
-        // Обновление сообщений
         loadMessages();
         
-        // Имитация ответа (для демо)
-        if (Math.random() > 0.7) {
-            setTimeout(() => {
-                const botMessages = [
-                    "Привет! Как дела?",
-                    "Кто-нибудь здесь?",
-                    "Теграфа - лучший чат!",
-                    "Я просто бот, не обращайте на меня внимания",
-                    "Попробуйте нашу секретную функцию 🔮"
-                ];
-                
-                const botMessage = {
-                    sender: "Теграфа-Бот",
-                    text: botMessages[Math.floor(Math.random() * botMessages.length)],
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                
-                const messages = JSON.parse(localStorage.getItem('tegrafaMessages')) || [];
-                messages.push(botMessage);
-                localStorage.setItem('tegrafaMessages', JSON.stringify(messages));
-                
-                loadMessages();
-            }, 2000);
+        // Имитация ответа (30% chance)
+        if (Math.random() < 0.3) {
+            setTimeout(sendBotMessage, 1500 + Math.random() * 3000);
         }
     }
-    
+
+    // Ответ бота
+    function sendBotMessage() {
+        const botMessages = [
+            "Привет! Как дела?",
+            "Кто-нибудь здесь?",
+            "Теграфа - лучший чат!",
+            "Я просто бот, не обращайте на меня внимания",
+            "Попробуйте нашу секретную функцию 🔮",
+            "Какой прекрасный день для общения!",
+            "Вы знали, что этот чат полностью на localStorage?",
+            "Напишите что-нибудь интересное!"
+        ];
+        
+        const botMessage = {
+            sender: "Теграфа-Бот",
+            text: botMessages[Math.floor(Math.random() * botMessages.length)],
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        
+        const messages = JSON.parse(localStorage.getItem('tegrafaMessages')) || [];
+        messages.push(botMessage);
+        localStorage.setItem('tegrafaMessages', JSON.stringify(messages));
+        loadMessages();
+    }
+
+    // Выход из аккаунта
+    function logout() {
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html';
+    }
+
+    // Обновление счетчика онлайн
+    function updateOnlineCount() {
+        const count = 1 + Math.floor(Math.random() * 15);
+        onlineCount.textContent = count;
+    }
+
+    // Функции для кнопок
+    function sendRandomSticker() {
+        const stickers = ['😀', '🤖', '🎉', '❤️', '🔥', '👀', '🚀', '🌈', '👍', '🎯'];
+        const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
+        messageInput.value += randomSticker;
+        messageInput.focus();
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light-theme');
+    }
+
+    function secretFunction() {
+        const secretMessages = [
+            "Вы активировали секретную функцию!",
+            "✨ Магия чата активирована ✨",
+            "Теперь вы видите скрытые сообщения",
+            "Поздравляем! Вы нашли пасхалку"
+        ];
+        
+        alert(secretMessages[Math.floor(Math.random() * secretMessages.length)]);
+    }
+
     // Обработчики событий
     sendBtn.addEventListener('click', sendMessage);
     
-    messageInput.addEventListener('keypress', function(e) {
+    messageInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
     
-    logoutBtn.addEventListener('click', function() {
-        localStorage.removeItem('currentUser');
-        window.location.href = 'index.html';
-    });
+    logoutBtn.addEventListener('click', logout);
     
-    // Имитация онлайн пользователей
-    function updateOnlineCount() {
-        const count = 1 + Math.floor(Math.random() * 10);
-        onlineCount.textContent = count;
-    }
+    // Назначение функций кнопкам
+    funButtons[0].addEventListener('click', sendRandomSticker);
+    funButtons[1].addEventListener('click', toggleTheme);
+    funButtons[2].addEventListener('click', secretFunction);
     
-    // Обновление каждые 5-10 секунд
+    // Обновление онлайн каждые 5-10 сек
     setInterval(updateOnlineCount, 5000 + Math.random() * 5000);
     updateOnlineCount();
     
-    // Загрузка начальных сообщений
+    // Загрузка сообщений при старте
     loadMessages();
-    
-    // Функциональность кнопок "приколов"
-    funButtons.forEach((btn, index) => {
-        btn.addEventListener('click', function() {
-            switch(index) {
-                case 0: // Случайный стикер
-                    const stickers = ['😀', '🤖', '🎉', '❤️', '🔥', '👀', '🚀', '🌈'];
-                    const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
-                    messageInput.value += randomSticker;
-                    break;
-                    
-                case 1: // Смена темы
-                    document.body.classList.toggle('light-theme');
-                    break;
-                    
-                case 2: // Секретная функция
-                    alert('Секретная функция активирована! Теперь все ваши сообщения будут волшебными ✨');
-                    break;
-            }
-        });
-    });
 });
