@@ -1,13 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     const currentUser = localStorage.getItem('currentUser');
-    const messagesContainer = document.getElementById('messages');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
-    const logoutBtn = document.getElementById('logout-btn');
-    const usernameDisplay = document.getElementById('username-display');
-    const userAvatar = document.getElementById('user-avatar');
-    const onlineCount = document.getElementById('online-count');
-    const funButtons = document.querySelectorAll('.fun-btn');
     
     // Проверка авторизации
     if (!currentUser) {
