@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теграфа - Общий чат</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="user-profile">
+                <div class="avatar" id="user-avatar"></div>
+                <span id="username-display"></span>
+            </div>
+            <div class="chat-list">
+                <div class="chat-item active" id="general-chat">
+                    <span>Общий чат</span>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button id="logout-btn">Выйти</button>
+            </div>
+        </div>
+        
+        <div class="chat-area">
+            <div class="chat-header">
+                <h2>Общий чат</h2>
+                <div class="online-count">👥 <span id="online-count">1</span> онлайн</div>
+            </div>
+            
+            <div class="messages" id="messages">
+                <!-- Сообщения будут здесь -->
+            </div>
+            
+            <div class="message-input">
+                <textarea id="message-input" placeholder="Напишите сообщение..."></textarea>
+                <button id="send-btn">Отправить</button>
+                <div class="fun-buttons">
+                    <button class="fun-btn" title="Случайный стикер">🎲</button>
+                    <button class="fun-btn" title="Сменить тему">🌓</button>
+                    <button class="fun-btn" title="Секретная функция">🔮</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/chat.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>
