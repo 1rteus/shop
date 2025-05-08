@@ -2,60 +2,90 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.getElementById('menuBtn');
     const menu = document.getElementById('menu');
     
-    // Открытие/закрытие меню
+    // Анимация меню
     menuBtn.addEventListener('click', function() {
         menu.classList.toggle('active');
         
-        // Анимация кнопки меню (превращение в крестик)
         if (menu.classList.contains('active')) {
             document.querySelectorAll('.menu-line').forEach((line, index) => {
-                if (index === 0) {
-                    line.style.transform = 'translateY(11px) rotate(45deg)';
-                } else if (index === 1) {
-                    line.style.opacity = '0';
-                } else if (index === 2) {
-                    line.style.transform = 'translateY(-11px) rotate(-45deg)';
-                }
+                if (index === 0) line.style.transform = 'translateY(11px) rotate(45deg)';
+                if (index === 1) line.style.opacity = '0';
+                if (index === 2) line.style.transform = 'translateY(-11px) rotate(-45deg)';
             });
         } else {
-            document.querySelectorAll('.menu-line').forEach((line, index) => {
+            document.querySelectorAll('.menu-line').forEach(line => {
                 line.style.transform = '';
                 line.style.opacity = '';
             });
         }
     });
     
-    // Закрытие меню при клике на пункт
+    // Закрытие меню
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', function() {
             menu.classList.remove('active');
-            document.querySelectorAll('.menu-line').forEach((line, index) => {
+            document.querySelectorAll('.menu-line').forEach(line => {
                 line.style.transform = '';
                 line.style.opacity = '';
             });
         });
     });
     
-    // Анимация элементов при скролле
-    const animateOnScroll = function() {
-        const elements = document.querySelectorAll('.animate-pop');
+    // Анимация при скролле
+    const animateElements = function() {
+        const elements = document.querySelectorAll('.scroll-animate');
         
         elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.2;
+            const elementTop = element.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
             
-            if (elementPosition < screenPosition) {
-                element.style.animation = 'popIn 1s ease forwards';
+            if (elementTop < windowHeight - 100) {
+                element.classList.add('animated');
+                
+                if (element.classList.contains('product-card')) {
+                    element.classList.add('rotate-in');
+                } else {
+                    element.classList.add('pop-in');
+                }
+            } else {
+                element.classList.remove('animated', 'pop-in', 'rotate-in');
             }
         });
     };
     
-    // Анимация при загрузке
-    setTimeout(() => {
-        document.querySelectorAll('.animate-pop').forEach(el => {
-            el.style.animation = 'popIn 1s ease forwards';
-        });
-    }, 300);
+    // Инициализация анимаций
+    window.addEventListener('load', animateElements);
+    window.addEventListener('scroll', animateElements);
+    window.addEventListener('resize', animateElements);
     
-    window.addEventListener('scroll', animateOnScroll);
+    // Плавный скролл для якорей
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // 3D эффект для карточек при движении мыши
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const angleY = (x - centerX) / 20;
+            const angleX = (centerY - y) / 20;
+            
+            card.style.transform = `translateY(-10px) scale(1.05) rotateY(${angleY}deg) rotateX(${angleX}deg)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(-10px) scale(1.05) rotateY(0) rotateX(0)';
+        });
+    });
 });
