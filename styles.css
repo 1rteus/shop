@@ -6,9 +6,19 @@
 }
 
 body {
-    background-color: #2a2a2a;
     color: #e0e0e0;
     overflow-x: hidden;
+    position: relative;
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #3a3a3a, #2e2e2e, #3a3a3a);
+    z-index: -1;
 }
 
 header {
@@ -41,7 +51,7 @@ header {
     top: 60px;
     right: -200px;
     width: 150px;
-    background-color: #3a3a3a;
+    background-color: rgba(58, 58, 58, 0.95);
     border-radius: 5px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     display: flex;
@@ -49,6 +59,7 @@ header {
     padding: 10px 0;
     transition: right 0.3s ease;
     z-index: 1000;
+    backdrop-filter: blur(5px);
 }
 
 .menu.active {
@@ -65,7 +76,7 @@ header {
 }
 
 .menu-item:hover {
-    background-color: #4a4a4a;
+    background-color: rgba(74, 74, 74, 0.7);
     color: #ffffff;
 }
 
@@ -74,22 +85,22 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
 }
 
 .hero-title {
     font-size: 3rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .section-title {
     font-size: 2.5rem;
     margin-bottom: 40px;
     text-align: center;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .products-section {
     padding: 100px 20px;
-    background-color: #333333;
 }
 
 .products-container {
@@ -99,29 +110,50 @@ header {
     gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    perspective: 1000px;
 }
 
 .product-card {
     width: 300px;
     height: 200px;
-    background: #3a3a3a;
+    background: rgba(58, 58, 58, 0.7);
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    background: #4a4a4a;
+    transform: translateY(-10px) scale(1.05) rotateY(5deg) rotateX(5deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    background: rgba(74, 74, 74, 0.8);
+}
+
+.product-card:hover::before {
+    transform: translateX(100%);
 }
 
 .about-section {
     padding: 100px 20px;
-    background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
     min-height: 50vh;
     display: flex;
     flex-direction: column;
@@ -137,37 +169,28 @@ header {
 }
 
 /* Анимации */
-.animate-pop {
-    animation: popIn 1s ease forwards;
+.scroll-animate {
     opacity: 0;
+    transition: all 0.6s ease;
 }
 
-@keyframes popIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.8) translateY(20px);
-    }
-    70% {
-        transform: scale(1.05);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+.scroll-animate.animated {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
 }
 
-/* Анимация при скролле */
-.animate-scroll {
-    animation: scrollPop 0.6s ease forwards;
+.pop-in {
+    transform: translateY(30px) scale(0.95);
 }
 
-@keyframes scrollPop {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.pop-in.animated {
+    transform: translateY(0) scale(1);
+}
+
+.rotate-in {
+    transform: rotateX(30deg) rotateY(-10deg);
+}
+
+.rotate-in.animated {
+    transform: rotateX(0) rotateY(0);
 }
