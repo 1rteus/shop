@@ -36,20 +36,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Анимация появления элементов при скролле
+    // Анимация элементов при скролле
     const animateOnScroll = function() {
-        const elements = document.querySelectorAll('.section-title, .product-card');
+        const elements = document.querySelectorAll('.animate-pop');
         
         elements.forEach(element => {
             const elementPosition = element.getBoundingClientRect().top;
             const screenPosition = window.innerHeight / 1.2;
             
             if (elementPosition < screenPosition) {
-                element.classList.add('visible');
+                element.style.animation = 'popIn 1s ease forwards';
             }
         });
     };
     
+    // Анимация при загрузке
+    setTimeout(() => {
+        document.querySelectorAll('.animate-pop').forEach(el => {
+            el.style.animation = 'popIn 1s ease forwards';
+        });
+    }, 300);
+    
     window.addEventListener('scroll', animateOnScroll);
-    animateOnScroll(); // Запустить при загрузке для уже видимых элементов
 });
