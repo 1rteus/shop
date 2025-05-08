@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.getElementById('menuBtn');
     const menu = document.getElementById('menu');
     
-    // Анимация меню
+    // Меню
     menuBtn.addEventListener('click', function() {
         menu.classList.toggle('active');
         
@@ -31,34 +31,56 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Анимация при скролле
-    const animateElements = function() {
-        const elements = document.querySelectorAll('.scroll-animate');
+    // Анимации при скролле
+    const animateOnScroll = function() {
+        const sections = document.querySelectorAll('.section');
         
-        elements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
+        sections.forEach(section => {
+            const sectionTop = section.getBoundingClientRect().top;
             const windowHeight = window.innerHeight;
             
-            if (elementTop < windowHeight - 100) {
-                element.classList.add('animated');
+            if (sectionTop < windowHeight - 100) {
+                // Анимация заголовков
+                const title = section.querySelector('.section-title');
+                if (title && !title.classList.contains('animate')) {
+                    title.classList.add('animate');
+                }
                 
-                if (element.classList.contains('product-card')) {
-                    element.classList.add('rotate-in');
-                } else {
-                    element.classList.add('pop-in');
+                // Анимация карточек продуктов
+                const cards = section.querySelectorAll('.product-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        if (!card.classList.contains('animate')) {
+                            card.classList.add('animate');
+                        }
+                    }, index * 100);
+                });
+                
+                // Анимация текста
+                const text = section.querySelector('p');
+                if (text && !text.classList.contains('animate')) {
+                    text.classList.add('animate');
                 }
             } else {
-                element.classList.remove('animated', 'pop-in', 'rotate-in');
+                // Сброс анимации при скролле вверх
+                const title = section.querySelector('.section-title');
+                if (title) title.classList.remove('animate');
+                
+                const cards = section.querySelectorAll('.product-card');
+                cards.forEach(card => card.classList.remove('animate'));
+                
+                const text = section.querySelector('p');
+                if (text) text.classList.remove('animate');
             }
         });
     };
     
-    // Инициализация анимаций
-    window.addEventListener('load', animateElements);
-    window.addEventListener('scroll', animateElements);
-    window.addEventListener('resize', animateElements);
+    // Инициализация
+    window.addEventListener('load', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('resize', animateOnScroll);
     
-    // Плавный скролл для якорей
+    // Плавный скролл
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
@@ -68,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 3D эффект для карточек при движении мыши
+    // 3D эффект для карточек
     const productCards = document.querySelectorAll('.product-card');
     
     productCards.forEach(card => {
@@ -81,11 +103,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const angleY = (x - centerX) / 20;
             const angleX = (centerY - y) / 20;
             
-            card.style.transform = `translateY(-10px) scale(1.05) rotateY(${angleY}deg) rotateX(${angleX}deg)`;
+            if (card.classList.contains('animate')) {
+                card.style.transform = `translateY(-10px) scale(1.05) rotateY(${angleY}deg) rotateX(${angleX}deg)`;
+            }
         });
         
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(-10px) scale(1.05) rotateY(0) rotateX(0)';
+            if (card.classList.contains('animate')) {
+                card.style.transform = 'translateY(0) scale(1) rotateY(0) rotateX(0)';
+            }
         });
     });
 });
