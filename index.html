@@ -3,39 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Теграфа - Вход/Регистрация</title>
-    <link rel="stylesheet" href="css/auth.css">
+    <title>Мой сайт</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="logo">Теграфа</div>
-        <div class="auth-form">
-            <div class="tabs">
-                <button class="tab active" id="login-tab">Вход</button>
-                <button class="tab" id="register-tab">Регистрация</button>
-            </div>
-            
-            <div class="form-container">
-                <form id="login-form">
-                    <input type="text" placeholder="Имя пользователя" required>
-                    <input type="password" placeholder="Пароль" required>
-                    <button type="submit">Войти</button>
-                </form>
-                
-                <form id="register-form">
-                    <input type="text" placeholder="Придумайте имя пользователя" required>
-                    <input type="password" placeholder="Придумайте пароль" required>
-                    <input type="password" placeholder="Повторите пароль" required>
-                    <button type="submit">Зарегистрироваться</button>
-                </form>
-            </div>
-            
-            <div class="auth-footer">
-                <p>Входя в Теграфу, вы соглашаетесь с нашими <a href="#">Условиями</a></p>
-            </div>
+    <header>
+        <div class="menu-btn" id="menuBtn">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
         </div>
-    </div>
-    
-    <script src="js/auth.js"></script>
+        <div class="menu" id="menu">
+            <a href="#products" class="menu-item">продукт</a>
+            <a href="#about" class="menu-item">о нас</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1 class="hero-title">Добро пожаловать</h1>
+        </section>
+
+        <section id="products" class="products-section">
+            <h2 class="section-title">Наши продукты</h2>
+            <div class="products-container">
+                <div class="product-card">
+                    <h3>пордукт</h3>
+                </div>
+                <div class="product-card">
+                    <h3>пордукт</h3>
+                </div>
+                <div class="product-card">
+                    <h3>пордукт</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <h2 class="section-title">о нас</h2>
+            <p>Информация о нашей компании</p>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
