@@ -98,23 +98,9 @@ section {
 .title {
     font-size: 2.5rem;
     margin-bottom: 40px;
-    position: relative;
-    overflow: hidden;
-}
-
-.title::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateY(100%);
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.title.animated::after {
-    transform: translateY(0);
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .products {
@@ -136,27 +122,13 @@ section {
     align-items: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     transition: all 0.5s;
-    position: relative;
-    overflow: hidden;
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
     transform-style: preserve-3d;
 }
 
-.product::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform: translateY(100%);
-    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.product.animated::after {
-    transform: translateY(0);
+.product h3 {
+    font-size: 1.5rem;
 }
 
 p {
@@ -170,7 +142,7 @@ p {
 
 .animated {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 @media (max-width: 768px) {
