@@ -18,31 +18,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Анимации при скролле
-    function animateElements() {
+    function animateOnScroll() {
         const elements = document.querySelectorAll('.title, .product, p');
         const windowHeight = window.innerHeight;
-        const triggerOffset = 100;
         
         elements.forEach(el => {
             const elementPosition = el.getBoundingClientRect().top;
-            const elementBottom = el.getBoundingClientRect().bottom;
             
-            // Анимация при входе в viewport
-            if (elementPosition < windowHeight - triggerOffset) {
+            if (elementPosition < windowHeight - 100) {
                 el.classList.add('animated');
-            }
-            
-            // Сброс анимации при выходе из viewport
-            if (elementBottom < 0 || elementPosition > windowHeight) {
-                el.classList.remove('animated');
             }
         });
     }
     
     // Инициализация анимаций
-    window.addEventListener('load', animateElements);
-    window.addEventListener('scroll', animateElements);
-    window.addEventListener('resize', animateElements);
+    window.addEventListener('load', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('resize', animateOnScroll);
 
     // 3D эффект для карточек
     const products = document.querySelectorAll('.product');
@@ -57,18 +49,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const angleX = (centerY - y) / 10;
             const angleY = (x - centerX) / 10;
             
-            product.style.transform = `
-                translateY(-10px) 
-                rotateX(${angleX}deg) 
-                rotateY(${angleY}deg) 
-                scale(1.05)
-            `;
-            product.style.boxShadow = '0 15px 30px rgba(0,0,0,0.3)';
+            if (product.classList.contains('animated')) {
+                product.style.transform = `
+                    rotateX(${angleX}deg) 
+                    rotateY(${angleY}deg) 
+                    scale(1.05)
+                `;
+                product.style.boxShadow = '0 15px 30px rgba(0,0,0,0.3)';
+            }
         });
         
         product.addEventListener('mouseleave', () => {
-            product.style.transform = 'translateY(0) rotateX(0) rotateY(0) scale(1)';
-            product.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            if (product.classList.contains('animated')) {
+                product.style.transform = 'rotateX(0) rotateY(0) scale(1)';
+                product.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+            }
         });
     });
 });
