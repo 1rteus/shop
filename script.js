@@ -1,43 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Элементы меню
+    // Меню
     const menuBtn = document.getElementById('menuBtn');
     const menu = document.getElementById('menu');
-    const menuOverlay = document.getElementById('menuOverlay');
     
-    // Функция для закрытия меню
-    function closeMenu() {
-        menuBtn.classList.remove('active');
-        menu.classList.remove('active');
-        menuOverlay.classList.remove('active');
-    }
-    
-    // Открытие/закрытие меню
-    menuBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
+    menuBtn.addEventListener('click', function() {
         this.classList.toggle('active');
         menu.classList.toggle('active');
-        menuOverlay.classList.toggle('active');
     });
-    
-    // Закрытие меню при клике вне его области
-    menuOverlay.addEventListener('click', closeMenu);
-    
-    // Закрытие меню при клике на пункт меню
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.addEventListener('click', closeMenu);
+
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', function(e) {
+        if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+            menuBtn.classList.remove('active');
+            menu.classList.remove('active');
+        }
     });
-    
-    // Анимации при скролле (работает на мобильных)
+
+    // Анимации при скролле
     function animateOnScroll() {
-        const elements = document.querySelectorAll('.animate');
+        const elements = document.querySelectorAll('.title, .product, p');
         const windowHeight = window.innerHeight;
         
         elements.forEach(el => {
             const elementPosition = el.getBoundingClientRect().top;
             
             if (elementPosition < windowHeight - 100) {
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0) scale(1)';
+                el.classList.add('animated');
             }
         });
     }
@@ -46,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('load', animateOnScroll);
     window.addEventListener('scroll', animateOnScroll);
     window.addEventListener('resize', animateOnScroll);
-    
-    // 3D эффект только для десктопов
+
+    // 3D эффект для карточек (только на ПК)
     if (window.innerWidth > 768) {
         const products = document.querySelectorAll('.product');
         
