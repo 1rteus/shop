@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.getElementById('menuBtn');
     const menu = document.getElementById('menu');
     
-    menuBtn.addEventListener('click', function() {
+    menuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
         this.classList.toggle('active');
         menu.classList.toggle('active');
     });
@@ -17,23 +18,31 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Анимации при скролле
-    function animateOnScroll() {
+    function animateElements() {
         const elements = document.querySelectorAll('.title, .product, p');
         const windowHeight = window.innerHeight;
+        const triggerOffset = 100;
         
         elements.forEach(el => {
             const elementPosition = el.getBoundingClientRect().top;
+            const elementBottom = el.getBoundingClientRect().bottom;
             
-            if (elementPosition < windowHeight - 100) {
+            // Анимация при входе в viewport
+            if (elementPosition < windowHeight - triggerOffset) {
                 el.classList.add('animated');
+            }
+            
+            // Сброс анимации при выходе из viewport
+            if (elementBottom < 0 || elementPosition > windowHeight) {
+                el.classList.remove('animated');
             }
         });
     }
     
     // Инициализация анимаций
-    window.addEventListener('load', animateOnScroll);
-    window.addEventListener('scroll', animateOnScroll);
-    window.addEventListener('resize', animateOnScroll);
+    window.addEventListener('load', animateElements);
+    window.addEventListener('scroll', animateElements);
+    window.addEventListener('resize', animateElements);
 
     // 3D эффект для карточек
     const products = document.querySelectorAll('.product');
